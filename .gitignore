@@ -1,0 +1,36 @@
+
+src/.vs/*
+v15/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+**.DS_Store
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+.local-chromium/
+**/wwwroot/lib
+
+# node modules
+**/node_modules/
+/.vs
+
+.idea/
+.local-chromium/
+
+**/publish
+**/Swagger/Generated
+/out/
+/tilt_modules/
