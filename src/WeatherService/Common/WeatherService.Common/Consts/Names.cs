@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace WeatherService.Database.Repository.Interface
+namespace WeatherService.Common.Consts
 {
-    public interface IWeatherRepository
+    public static class Names
     {
+        public static string Warsaw => "Warsaw";
     }
 }

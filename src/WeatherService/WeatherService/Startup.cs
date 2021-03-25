@@ -2,8 +2,10 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +13,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using WeatherService.Api.Config;
 using WeatherService.Common.Mvc.Extensions;
 using WeatherService.Database.Context;
+using WeatherService.Services.HostedService;
+using WeatherService.Services.Initializer;
 using WeatherService.Services.Mapping;
 
 #endregion
@@ -28,7 +32,13 @@ namespace WeatherService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(opt =>
+                {
+                    opt.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    opt.LocalizationEnabled = false;
+                })
+                .AddNewtonsoftJson();
             services.RegisterModulesServices();
 
             // Automapper
@@ -41,8 +51,10 @@ namespace WeatherService
             services.AddAutoMapper(automapperAssemblies);
             services.AddSwaggerConfiguration();
 
-            services.AddDbContext<WeatherContext>();
-            services.AddEntityFrameworkInMemoryDatabase();
+            services.AddDbContext<WeatherContext>(opt => opt.UseInMemoryDatabase("WeatherDatabase"));
+
+            services.AddScoped<Initializer>();
+            services.AddHostedService<ConsumeWeatherHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

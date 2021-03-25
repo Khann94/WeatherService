@@ -25,7 +25,7 @@ namespace WeatherService.Database.Entity.EntityConfiguration
 
             builder
                 .Property(c => c.ExternalId)
-                .HasDefaultValue(DateTime.UtcNow);
+                .HasDefaultValue(Guid.NewGuid());
 
             builder
                 .HasAlternateKey(c => c.ExternalId);

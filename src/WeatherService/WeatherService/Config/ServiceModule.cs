@@ -30,7 +30,7 @@ namespace WeatherService.Api.Config
                         implementation.Name.Equals($"I{service.Name}", StringComparison.OrdinalIgnoreCase)))
                 .WithTransientLifetime());
 
-            services.AddTransient<IWeatherRepository, WeatherRepository>();
+            services.AddTransient<ICityRepository, CityRepository>();
 
             return services;
         }

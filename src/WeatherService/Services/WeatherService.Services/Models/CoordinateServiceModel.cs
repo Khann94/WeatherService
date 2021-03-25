@@ -8,24 +8,11 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace WeatherService.Database.Entity
+namespace WeatherService.Services.Models
 {
-    public class City : BaseEntity
+    public class CoordinateServiceModel
     {
-        #region Constructor(s)
-
-        public City()
-        {
-            Weathers = new List<Weather>();
-        }
-
-        #endregion
-
         #region Public properties
-
-        public string Name { get; set; }
-
-        public List<Weather> Weathers { get; set; }
 
         public double Latitude { get; set; }
 

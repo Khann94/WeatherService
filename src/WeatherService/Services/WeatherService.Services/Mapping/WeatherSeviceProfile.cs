@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using WeatherService.Database.Entity;
+using WeatherService.Services.Models;
 
 #endregion
 
@@ -15,6 +17,8 @@ namespace WeatherService.Services.Mapping
     {
         public WeatherSeviceProfile()
         {
+            CreateMap<City, CityServiceModel>();
+            CreateMap<Weather, WeatherServiceModel>();
         }
     }
 }

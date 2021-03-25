@@ -13,8 +13,4 @@
     <ProjectReference Include="..\..\Database\WeatherService.Database\WeatherService.Database.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

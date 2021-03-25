@@ -24,6 +24,12 @@ namespace WeatherService.Database.Entity.EntityConfiguration
                 .WithOne(x => x.City)
                 .HasForeignKey(x => x.CityId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(c => c.Latitude)
+                .IsRequired();
+
+            builder.Property(c => c.Longitude)
+                .IsRequired();
         }
 
         #endregion

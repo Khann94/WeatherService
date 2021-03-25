@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
+using WeatherService.Api.Models.Request;
+using WeatherService.Api.Models.Response;
+using WeatherService.Common.Consts;
 using WeatherService.Common.Mvc.Attribute;
+using WeatherService.Services.Models;
 using WeatherService.Services.Services.Interfaces;
 
 #endregion
@@ -45,10 +48,13 @@ namespace WeatherService.Controllers
         #region GET
 
         [HttpGet]
-        [Swagger(HttpStatusCode.OK, description: "Get weather for Warsaw")]
+        [Swagger(HttpStatusCode.OK, typeof(CityWithWeatherResponseModel), description: "Get weather for Warsaw")]
         public async Task<IActionResult> GetWeatherForWarsaw()
         {
-            return Ok();
+            var cityWithWeather = await WeatherService.GetByExternalId(SeedExternalIds.WarsawExternalId);
+            var mapped = Mapper.Map<CityWithWeatherResponseModel>(cityWithWeather);
+
+            return Ok(mapped);
         }
 
         #endregion
@@ -56,10 +62,12 @@ namespace WeatherService.Controllers
         #region PUT
 
         [HttpPut]
-        [Swagger(HttpStatusCode.OK, description: "Get weather by lat long")]
-        public async Task<IActionResult> GetWeatherByLatLong()
+        [Swagger(HttpStatusCode.OK, typeof(WeathersResponseModel), description: "Get weather by latitude longitude")]
+        public async Task<IActionResult> GetWeatherByCoordinates([FromBody] CoordinateRequestModel requestModel)
         {
-            return Ok();
+            var serviceModel = Mapper.Map<CoordinateServiceModel>(requestModel);
+
+            return Ok(serviceModel);
         }
 
         #endregion
