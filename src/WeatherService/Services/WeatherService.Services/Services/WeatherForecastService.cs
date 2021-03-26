@@ -18,7 +18,7 @@ namespace WeatherService.Services.Services
     {
         #region Private field(s)
 
-        private readonly Lazy<IIntergrationService> IntergrationServiceProvider;
+        private readonly Lazy<IIntegrationService> IntergrationServiceProvider;
         private readonly Lazy<ICityRepository> CityRepositoryProvider;
         private readonly Lazy<IMapper> MapperProvider;
 
@@ -27,7 +27,7 @@ namespace WeatherService.Services.Services
         #region Constructor(s)
 
         public WeatherForecastService(
-            Lazy<IIntergrationService> intergrationServiceProvider,
+            Lazy<IIntegrationService> intergrationServiceProvider,
             Lazy<ICityRepository> cityRepositoryProvider,
             Lazy<IMapper> mapperProvider)
         {
@@ -40,7 +40,7 @@ namespace WeatherService.Services.Services
 
         #region Private properties
 
-        private IIntergrationService IntergrationService => IntergrationServiceProvider.Value;
+        private IIntegrationService IntergrationService => IntergrationServiceProvider.Value;
 
         private ICityRepository CityRepository => CityRepositoryProvider.Value;
         
@@ -72,6 +72,11 @@ namespace WeatherService.Services.Services
             var mapped = Mapper.Map<CityServiceModel>(city);
 
             return mapped;
+        }
+
+        public async Task GetWeatherForCoordinates(double latitude, double longitude)
+        {
+            await IntergrationService.GetWeatherForCoordinates(latitude, longitude);
         }
 
         #endregion

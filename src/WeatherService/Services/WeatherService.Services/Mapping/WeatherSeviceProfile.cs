@@ -19,6 +19,10 @@ namespace WeatherService.Services.Mapping
         {
             CreateMap<City, CityServiceModel>();
             CreateMap<Weather, WeatherServiceModel>();
+            CreateMap<Wind, WindServiceModel>();
+
+            CreateMap<WindServiceModel, Wind>();
+            CreateMap<WeatherServiceModel, Weather>();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WeatherService.Common.Consts;
 using WeatherService.Database.Context;
@@ -20,7 +21,8 @@ namespace WeatherService.Services.Initializer
         #region Private field(s)
 
         private readonly WeatherContext Context;
-        private readonly IIntergrationService IntergrationService;
+        private readonly IIntegrationService IntergrationService;
+        private readonly IMapper Mapper;
 
         #endregion
 
@@ -28,10 +30,12 @@ namespace WeatherService.Services.Initializer
 
         public Initializer(
             WeatherContext context,
-            IIntergrationService intergrationService)
+            IIntegrationService intergrationService,
+            IMapper mapper)
         {
-            Context = context ?? throw new ArgumentNullException("Missing context for initializer");
+            Context = context ?? throw new ArgumentNullException("Missing context for in initializer");
             IntergrationService = intergrationService ?? throw new ArgumentNullException("Missing integration service initializer");
+            Mapper = mapper ?? throw new ArgumentNullException("Missing mapper in initializer");
         }
 
         #endregion
@@ -59,7 +63,8 @@ namespace WeatherService.Services.Initializer
 
             foreach (var city in cities)
             {
-                // TODO Add logic to get data from the integration service
+                var weatherFromApi = await IntergrationService.GetWeatherForCoordinates(city.Latitude, city.Longitude);
+                city.Weathers.AddRange(Mapper.Map<List<Weather>>(weatherFromApi));
             }
 
             await Context.SaveChangesAsync();

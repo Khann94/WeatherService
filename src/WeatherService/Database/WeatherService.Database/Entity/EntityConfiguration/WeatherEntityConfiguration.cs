@@ -24,6 +24,8 @@ namespace WeatherService.Database.Entity.EntityConfiguration
                 .WithMany(x => x.Weathers)
                 .HasForeignKey(x => x.CityId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.OwnsOne(x => x.Wind10m);
         }
 
         #endregion

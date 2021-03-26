@@ -23,12 +23,7 @@ namespace WeatherService.Database.Entity.EntityConfiguration
 
             builder.ToTable(typeof(TEntity).Name);
 
-            builder
-                .Property(c => c.ExternalId)
-                .HasDefaultValue(Guid.NewGuid());
-
-            builder
-                .HasAlternateKey(c => c.ExternalId);
+            builder.HasAlternateKey(c => c.ExternalId);
         }
 
         #endregion

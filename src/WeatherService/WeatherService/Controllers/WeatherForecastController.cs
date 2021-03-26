@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WeatherService.Api.Models.Request;
 using WeatherService.Api.Models.Response;
 using WeatherService.Common.Consts;
 using WeatherService.Common.Mvc.Attribute;
-using WeatherService.Services.Models;
 using WeatherService.Services.Services.Interfaces;
 
 #endregion
@@ -47,7 +45,7 @@ namespace WeatherService.Controllers
 
         #region GET
 
-        [HttpGet]
+        [HttpGet("warsaw")]
         [Swagger(HttpStatusCode.OK, typeof(CityWithWeatherResponseModel), description: "Get weather for Warsaw")]
         public async Task<IActionResult> GetWeatherForWarsaw()
         {
@@ -61,13 +59,12 @@ namespace WeatherService.Controllers
 
         #region PUT
 
-        [HttpPut]
+        [HttpGet("coordinates")]
         [Swagger(HttpStatusCode.OK, typeof(WeathersResponseModel), description: "Get weather by latitude longitude")]
-        public async Task<IActionResult> GetWeatherByCoordinates([FromBody] CoordinateRequestModel requestModel)
+        public async Task<IActionResult> GetWeatherByCoordinates([FromQuery] double latitude, double longitude)
         {
-            var serviceModel = Mapper.Map<CoordinateServiceModel>(requestModel);
-
-            return Ok(serviceModel);
+            await WeatherService.GetWeatherForCoordinates(latitude, longitude);
+            return Ok();
         }
 
         #endregion

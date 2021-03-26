@@ -16,6 +16,7 @@ namespace WeatherService.Api.Mapping
         {
             CreateMap<CityServiceModel, CityWithWeatherResponseModel>();
             CreateMap<WeatherServiceModel, WeatherItemResponseModel>();
+            CreateMap<WindServiceModel, WindResponseModel>();
         }
 
         #endregion
