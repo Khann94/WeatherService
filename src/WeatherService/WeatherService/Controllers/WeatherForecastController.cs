@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -49,10 +50,10 @@ namespace WeatherService.Controllers
         [Swagger(HttpStatusCode.OK, typeof(CityWithWeatherResponseModel), description: "Get weather for Warsaw")]
         public async Task<IActionResult> GetWeatherForWarsaw()
         {
-            var cityWithWeather = await WeatherService.GetByExternalId(SeedExternalIds.WarsawExternalId);
-            var mapped = Mapper.Map<CityWithWeatherResponseModel>(cityWithWeather);
+            var cityWithWeather = await WeatherService.GetCityByExternalId(SeedExternalIds.WarsawExternalId);
+            var response = Mapper.Map<CityWithWeatherResponseModel>(cityWithWeather);
 
-            return Ok(mapped);
+            return Ok(response);
         }
 
         #endregion
@@ -63,8 +64,15 @@ namespace WeatherService.Controllers
         [Swagger(HttpStatusCode.OK, typeof(WeathersResponseModel), description: "Get weather by latitude longitude")]
         public async Task<IActionResult> GetWeatherByCoordinates([FromQuery] double latitude, double longitude)
         {
-            await WeatherService.GetWeatherForCoordinates(latitude, longitude);
-            return Ok();
+            var weathers = await WeatherService.GetWeatherForCoordinates(latitude, longitude);
+            var response = new WeathersResponseModel()
+            {
+                Latitude = latitude,
+                Longitude = longitude,
+                Weathers = Mapper.Map<List<WeatherItemResponseModel>>(weathers),
+            };
+
+            return Ok(response);
         }
 
         #endregion

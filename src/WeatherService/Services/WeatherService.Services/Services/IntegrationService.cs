@@ -34,7 +34,7 @@ namespace WeatherService.Services.Services
 
         public async Task<List<WeatherServiceModel>> GetWeatherForCoordinates(double latitude, double longitude)
         {
-            var  weatherInWrapper = new WeatherIntegrationServiceModel();
+            WeatherIntegrationServiceModel weatherInWrapper;
             ValidateCoordinates(latitude, longitude);
             try
             {

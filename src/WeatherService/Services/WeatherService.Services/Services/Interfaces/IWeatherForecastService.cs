@@ -15,8 +15,8 @@ namespace WeatherService.Services.Services.Interfaces
     {
         Task UpdateWeatherForExistingCities();
 
-        Task<CityServiceModel> GetByExternalId(Guid externalId);
+        Task<CityServiceModel> GetCityByExternalId(Guid externalId);
 
-        Task GetWeatherForCoordinates(double latitude, double longitude);
+        Task<List<WeatherServiceModel>> GetWeatherForCoordinates(double latitude, double longitude);
     }
 }

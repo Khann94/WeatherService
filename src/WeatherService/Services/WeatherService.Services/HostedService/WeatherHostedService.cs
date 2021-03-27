@@ -43,11 +43,11 @@ namespace WeatherService.Services.HostedService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                Logger.LogInformation("Updating weather for cities.");
+                Logger.LogInformation("Updating weather for cities in database.");
 
                 await WeatherService.UpdateWeatherForExistingCities();
 
-                Logger.LogInformation("Weather Hosted Service is working. Weather updated.");
+                Logger.LogInformation("Weather Hosted Service is working. Weather has been updated.");
                 await Task.Delay(FifeMinutes, stoppingToken);
             }
         }

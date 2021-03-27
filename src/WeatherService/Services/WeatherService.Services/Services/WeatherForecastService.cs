@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
+using WeatherService.Database.Entity;
 using WeatherService.Database.Repository.Interface;
 using WeatherService.Services.Models;
 using WeatherService.Services.Services.Interfaces;
@@ -29,11 +31,13 @@ namespace WeatherService.Services.Services
         public WeatherForecastService(
             Lazy<IIntegrationService> intergrationServiceProvider,
             Lazy<ICityRepository> cityRepositoryProvider,
-            Lazy<IMapper> mapperProvider)
+            Lazy<IMapper> mapperProvider,
+            ILogger<WeatherForecastService> logger)
         {
             IntergrationServiceProvider = intergrationServiceProvider;
             CityRepositoryProvider = cityRepositoryProvider;
             MapperProvider = mapperProvider;
+            Logger = logger;
         }
 
         #endregion
@@ -46,25 +50,36 @@ namespace WeatherService.Services.Services
         
         private IMapper Mapper => MapperProvider.Value;
 
+        private ILogger<WeatherForecastService> Logger;
+
         #endregion
 
         #region Public method(s)
 
         public async Task UpdateWeatherForExistingCities()
         {
+            Logger.LogInformation($"Starting updating weather for cities from database");
             var cities = await CityRepository.GetAllCitiesWithWeathers();
 
             foreach (var city in cities)
             {
-                // TODO Logic to update weather
+                Logger.LogInformation($"Making call by coordinates lat {city.Latitude}, long {city.Longitude}, city {city.Name}, cityExternalId {city.ExternalId}");
+                var weatherFromApi = await IntergrationService.GetWeatherForCoordinates(city.Latitude, city.Longitude);
+
+                Logger.LogInformation($"Updating weather for city {city.Name}, cityExternalId {city.ExternalId}");
+                // We only want to store the newest weather data
+                city.Weathers.Clear();
+                city.Weathers.AddRange(Mapper.Map<List<Weather>>(weatherFromApi));
+
+                Logger.LogInformation($"Weather updated for city {city.Name}, cityExternalId {city.ExternalId}");
             }
 
             await CityRepository.Update(cities);
-
+            Logger.LogInformation($"Weather for cities has been updated");
             return;
         }
 
-        public async Task<CityServiceModel> GetByExternalId(Guid externalId)
+        public async Task<CityServiceModel> GetCityByExternalId(Guid externalId)
         {
             var city = await CityRepository.GetByExternalIdOrNull(externalId)
                 ?? throw new Exception("Incorrect externalId to get city");
@@ -74,9 +89,11 @@ namespace WeatherService.Services.Services
             return mapped;
         }
 
-        public async Task GetWeatherForCoordinates(double latitude, double longitude)
+        public async Task<List<WeatherServiceModel>> GetWeatherForCoordinates(double latitude, double longitude)
         {
-            await IntergrationService.GetWeatherForCoordinates(latitude, longitude);
+            var weathers = await IntergrationService.GetWeatherForCoordinates(latitude, longitude);
+
+            return weathers;
         }
 
         #endregion
